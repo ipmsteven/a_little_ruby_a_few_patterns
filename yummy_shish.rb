@@ -6,11 +6,13 @@ class Shish
   def is_vegetarian?
     raise NotImplementedError
   end
+
+  def holder
+    raise NotImplementedError
+  end
 end
 
 class Skewer < Shish
-  attr_reader :holder
-
   def initialize(holder)
     @holder = holder
   end
@@ -21,6 +23,10 @@ class Skewer < Shish
 
   def is_vegetarian?
     true
+  end
+
+  def holder
+    @holder
   end
 end
 
@@ -38,6 +44,10 @@ class Onion < Shish
   def is_vegetarian?
     base.is_vegetarian?
   end
+
+  def holder
+    base.holder
+  end
 end
 
 class Lamb < Shish
@@ -54,6 +64,10 @@ class Lamb < Shish
   def is_vegetarian?
     false
   end
+
+  def holder
+    base.holder
+  end
 end
 
 class Tomato < Shish
@@ -69,6 +83,10 @@ class Tomato < Shish
 
   def is_vegetarian?
     base.is_vegetarian?
+  end
+
+  def holder
+    base.holder
   end
 end
 
@@ -94,3 +112,4 @@ puts Onion.new(Onion.new(Onion.new(Skewer.new(Dagger.new)))).only_onions?
 puts Onion.new(Onion.new(Tomato.new(Skewer.new(Sabre.new)))).only_onions?
 puts Onion.new(Onion.new(Tomato.new(Skewer.new(Gold.new)))).is_vegetarian?
 puts Onion.new(Lamb.new(Tomato.new(Skewer.new(Wood.new)))).is_vegetarian?
+puts Onion.new(Lamb.new(Tomato.new(Skewer.new(Wood.new)))).holder
