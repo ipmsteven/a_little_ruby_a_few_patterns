@@ -2,10 +2,18 @@ class Pizza
   def remove_anchovy
     raise NotImplementedError
   end
+
+  def top_anchovy_with_cheese
+    raise NotImplementedError
+  end
 end
 
 class Crust < Pizza
   def remove_anchovy
+    Crust.new
+  end
+
+  def top_anchovy_with_cheese
     Crust.new
   end
 end
@@ -20,6 +28,10 @@ class Cheese < Pizza
   def remove_anchovy
     Cheese.new(base.remove_anchovy)
   end
+
+  def top_anchovy_with_cheese
+    Cheese.new(base.top_anchovy_with_cheese)
+  end
 end
 
 class Olive < Pizza
@@ -31,6 +43,10 @@ class Olive < Pizza
 
   def remove_anchovy
     Olive.new(base.remove_anchovy)
+  end
+
+  def top_anchovy_with_cheese
+    Olive.new(base.top_anchovy_with_cheese)
   end
 end
 
@@ -44,6 +60,10 @@ class Anchovy < Pizza
   def remove_anchovy
     base.remove_anchovy
   end
+
+  def top_anchovy_with_cheese
+    Cheese.new(Anchovy.new(base.top_anchovy_with_cheese))
+  end
 end
 
 class Sausage < Pizza
@@ -56,9 +76,12 @@ class Sausage < Pizza
   def remove_anchovy
     Sausage.new(base.remove_anchovy)
   end
+
+  def top_anchovy_with_cheese
+    Sausage.new(base.top_anchovy_with_cheese)
+  end
 end
 
 Anchovy.new(Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))))
-require 'pry'; binding.pry
-Anchovy.new(Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))))
 Anchovy.new(Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new))))).remove_anchovy
+Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))).top_anchovy_with_cheese
