@@ -6,6 +6,10 @@ class Pizza
   def top_anchovy_with_cheese
     raise NotImplementedError
   end
+
+  def substitute_anchovy_by_cheese
+    raise NotImplementedError
+  end
 end
 
 class Crust < Pizza
@@ -14,6 +18,10 @@ class Crust < Pizza
   end
 
   def top_anchovy_with_cheese
+    Crust.new
+  end
+
+  def substitute_anchovy_by_cheese
     Crust.new
   end
 end
@@ -32,6 +40,10 @@ class Cheese < Pizza
   def top_anchovy_with_cheese
     Cheese.new(base.top_anchovy_with_cheese)
   end
+
+  def substitute_anchovy_by_cheese
+    Cheese.new(base.substitute_anchovy_by_cheese)
+  end
 end
 
 class Olive < Pizza
@@ -47,6 +59,10 @@ class Olive < Pizza
 
   def top_anchovy_with_cheese
     Olive.new(base.top_anchovy_with_cheese)
+  end
+
+  def substitute_anchovy_by_cheese
+    Olive.new(base.substitute_anchovy_by_cheese)
   end
 end
 
@@ -64,6 +80,10 @@ class Anchovy < Pizza
   def top_anchovy_with_cheese
     Cheese.new(Anchovy.new(base.top_anchovy_with_cheese))
   end
+
+  def substitute_anchovy_by_cheese
+    Cheese.new(base.top_anchovy_with_cheese)
+  end
 end
 
 class Sausage < Pizza
@@ -80,8 +100,13 @@ class Sausage < Pizza
   def top_anchovy_with_cheese
     Sausage.new(base.top_anchovy_with_cheese)
   end
+
+  def substitute_anchovy_by_cheese
+    Sausage.new(base.substitute_anchovy_by_cheese)
+  end
 end
 
 Anchovy.new(Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))))
 Anchovy.new(Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new))))).remove_anchovy
 Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))).top_anchovy_with_cheese
+Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))).substitute_anchovy_by_cheese
