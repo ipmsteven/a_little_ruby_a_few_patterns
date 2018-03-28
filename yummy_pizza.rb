@@ -106,7 +106,28 @@ class Sausage < Pizza
   end
 end
 
+class Spinach < Pizza
+  attr_reader :base
+
+  def initialize(base)
+    @base = base
+  end
+
+  def remove_anchovy
+    Spinach.new(base.remove_anchovy)
+  end
+
+  def top_anchovy_with_cheese
+    Spinach.new(base.top_anchovy_with_cheese)
+  end
+
+  def substitute_anchovy_by_cheese
+    Spinach.new(base.substitute_anchovy_by_cheese)
+  end
+end
+
 Anchovy.new(Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))))
 Anchovy.new(Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new))))).remove_anchovy
 Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))).top_anchovy_with_cheese
 Olive.new(Anchovy.new(Cheese.new(Sausage.new(Crust.new)))).substitute_anchovy_by_cheese
+Anchovy.new(Olive.new(Spinach.new(Cheese.new(Sausage.new(Crust.new)))))
