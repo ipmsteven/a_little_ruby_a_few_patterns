@@ -50,6 +50,32 @@ class TopAnchovyWithCheeseVisitor
   end
 end
 
+class SubstituteAnchovyByCheeseVisitor
+  def for_crust
+    Crust.new
+  end
+
+  def for_cheese(base)
+    Cheese.new(base.substitute_anchovy_by_cheese)
+  end
+
+  def for_olive(base)
+    Olive.new(base.substitute_anchovy_by_cheese)
+  end
+
+  def for_anchovy(base)
+    Cheese.new(base.substitute_anchovy_by_cheese)
+  end
+
+  def for_sausage(base)
+    Sausage.new(base.substitute_anchovy_by_cheese)
+  end
+
+  def for_spinach(base)
+    Spinach.new(base.substitute_anchovy_by_cheese)
+  end
+end
+
 class Pizza
   def remove_anchovy
     raise NotImplementedError
@@ -72,6 +98,10 @@ class Pizza
   def top_anchovy_with_cheese_visitor
     TopAnchovyWithCheeseVisitor.new
   end
+
+  def substitute_anchovy_by_cheese_visitor
+    SubstituteAnchovyByCheeseVisitor.new
+  end
 end
 
 class Crust < Pizza
@@ -84,7 +114,7 @@ class Crust < Pizza
   end
 
   def substitute_anchovy_by_cheese
-    Crust.new
+    substitute_anchovy_by_cheese_visitor.for_crust
   end
 end
 
@@ -104,7 +134,7 @@ class Cheese < Pizza
   end
 
   def substitute_anchovy_by_cheese
-    Cheese.new(base.substitute_anchovy_by_cheese)
+    substitute_anchovy_by_cheese_visitor.for_cheese(base)
   end
 end
 
@@ -124,7 +154,7 @@ class Olive < Pizza
   end
 
   def substitute_anchovy_by_cheese
-    Olive.new(base.substitute_anchovy_by_cheese)
+    substitute_anchovy_by_cheese_visitor.for_olive(base)
   end
 end
 
@@ -144,7 +174,7 @@ class Anchovy < Pizza
   end
 
   def substitute_anchovy_by_cheese
-    Cheese.new(base.top_anchovy_with_cheese)
+    substitute_anchovy_by_cheese_visitor.for_anchovy(base)
   end
 end
 
@@ -164,7 +194,7 @@ class Sausage < Pizza
   end
 
   def substitute_anchovy_by_cheese
-    Sausage.new(base.substitute_anchovy_by_cheese)
+    substitute_anchovy_by_cheese_visitor.for_sausage(base)
   end
 end
 
@@ -184,7 +214,7 @@ class Spinach < Pizza
   end
 
   def substitute_anchovy_by_cheese
-    Spinach.new(base.substitute_anchovy_by_cheese)
+    substitute_anchovy_by_cheese_visitor.for_spinach(base)
   end
 end
 
