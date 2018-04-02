@@ -24,6 +24,32 @@ class RemoveAnchovyVisitor
   end
 end
 
+class TopAnchovyWithCheeseVisitor
+  def for_crust
+    Crust.new
+  end
+
+  def for_cheese(base)
+    Cheese.new(base.top_anchovy_with_cheese)
+  end
+
+  def for_olive(base)
+    Olive.new(base.top_anchovy_with_cheese)
+  end
+
+  def for_anchovy(base)
+    Cheese.new(Anchovy.new(base.top_anchovy_with_cheese))
+  end
+
+  def for_sausage(base)
+    Sausage.new(base.top_anchovy_with_cheese)
+  end
+
+  def for_spinach(base)
+    Spinach.new(base.top_anchovy_with_cheese)
+  end
+end
+
 class Pizza
   def remove_anchovy
     raise NotImplementedError
@@ -42,6 +68,10 @@ class Pizza
   def remove_anchovy_visitor
     RemoveAnchovyVisitor.new
   end
+
+  def top_anchovy_with_cheese_visitor
+    TopAnchovyWithCheeseVisitor.new
+  end
 end
 
 class Crust < Pizza
@@ -50,7 +80,7 @@ class Crust < Pizza
   end
 
   def top_anchovy_with_cheese
-    Crust.new
+    top_anchovy_with_cheese_visitor.for_crust
   end
 
   def substitute_anchovy_by_cheese
@@ -70,7 +100,7 @@ class Cheese < Pizza
   end
 
   def top_anchovy_with_cheese
-    Cheese.new(base.top_anchovy_with_cheese)
+    top_anchovy_with_cheese_visitor.for_cheese(base)
   end
 
   def substitute_anchovy_by_cheese
@@ -90,7 +120,7 @@ class Olive < Pizza
   end
 
   def top_anchovy_with_cheese
-    Olive.new(base.top_anchovy_with_cheese)
+    top_anchovy_with_cheese_visitor.for_olive(base)
   end
 
   def substitute_anchovy_by_cheese
@@ -110,7 +140,7 @@ class Anchovy < Pizza
   end
 
   def top_anchovy_with_cheese
-    Cheese.new(Anchovy.new(base.top_anchovy_with_cheese))
+    top_anchovy_with_cheese_visitor.for_anchovy(base)
   end
 
   def substitute_anchovy_by_cheese
@@ -130,7 +160,7 @@ class Sausage < Pizza
   end
 
   def top_anchovy_with_cheese
-    Sausage.new(base.top_anchovy_with_cheese)
+    top_anchovy_with_cheese_visitor.for_sausage(base)
   end
 
   def substitute_anchovy_by_cheese
@@ -150,7 +180,7 @@ class Spinach < Pizza
   end
 
   def top_anchovy_with_cheese
-    Spinach.new(base.top_anchovy_with_cheese)
+    top_anchovy_with_cheese_visitor.for_spinach(base)
   end
 
   def substitute_anchovy_by_cheese
