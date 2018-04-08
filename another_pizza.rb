@@ -1,32 +1,32 @@
-class RemoveFishFn
-  def for_crust(fish)
+class RemoveFn
+  def for_crust(object)
     Crust.new
   end
 
-  def for_topping(topping, pizza, fish)
-    if topping.equal? fish
-      pizza.remove_fish(fish)
+  def for_topping(topping, pizza, object)
+    if topping.equal? object
+      pizza.remove_object(object)
     else
-      Topping.new(topping, pizza.remove_fish(fish))
+      Topping.new(topping, pizza.remove_object(object))
     end
   end
 end
 
 class Pizza
-  def remove_fish(fish)
+  def remove_object(object)
     raise NotImplementedError
   end
 
   private
 
-  def remove_fish_fn
-    RemoveFishFn.new
+  def remove_fn
+    RemoveFn.new
   end
 end
 
 class Crust < Pizza
-  def remove_fish(fish)
-    remove_fish_fn.for_crust(fish)
+  def remove_object(object)
+    remove_fn.for_crust(object)
   end
 end
 
@@ -38,8 +38,8 @@ class Topping < Pizza
     @pizza   = pizza
   end
 
-  def remove_fish(fish)
-    remove_fish_fn.for_topping(topping, pizza, fish)
+  def remove_object(object)
+    remove_fn.for_topping(topping, pizza, object)
   end
 end
 
@@ -62,5 +62,5 @@ class Tuna < Fish
 end
 
 Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new)))
-Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new))).remove_fish(Salmon.new)
+Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new))).remove_object(Salmon.new)
 
