@@ -5,9 +5,9 @@ class SubstituteFn
 
   def for_topping(topping, pizza, old_object, new_object)
     if topping.equal? old_object
-      Topping.new(new_object, pizza.substitute_object(old_object, new_object))
+      Topping.new(new_object, pizza.substitute_object(old_object, new_object, self))
     else
-      Topping.new(topping, pizza.substitute_object(old_object, new_object))
+      Topping.new(topping, pizza.substitute_object(old_object, new_object, self))
     end
   end
 end
@@ -27,31 +27,21 @@ class RemoveFn
 end
 
 class Pizza
-  def remove_object(object)
+  def remove_object(object, remove_fn)
     raise NotImplementedError
   end
 
-  def substitute_object(old_object, new_object)
+  def substitute_object(old_object, new_object, substitute_fn)
     raise NotImplementedError
-  end
-
-  private
-
-  def remove_fn
-    RemoveFn.new
-  end
-
-  def substitute_fn
-    SubstituteFn.new
   end
 end
 
 class Crust < Pizza
-  def remove_object(object)
+  def remove_object(object, remove_fn = RemoveFn.new)
     remove_fn.for_crust(object)
   end
 
-  def substitute_object(old_object, new_object)
+  def substitute_object(old_object, new_object, substitute_fn = SubstituteFn.new)
     substitute_fn.for_crust(old_object, new_object)
   end
 end
@@ -64,11 +54,11 @@ class Topping < Pizza
     @pizza   = pizza
   end
 
-  def remove_object(object)
+  def remove_object(object, remove_fn = RemoveFn.new)
     remove_fn.for_topping(topping, pizza, object)
   end
 
-  def substitute_object(old_object, new_object)
+  def substitute_object(old_object, new_object, substitute_fn = SubstituteFn.new)
     substitute_fn.for_topping(topping, pizza, old_object, new_object)
   end
 end
