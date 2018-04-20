@@ -55,6 +55,31 @@ class RemoveFn
   attr_reader :object
 end
 
+class LimitedSubstituteFn
+  include PizzaVisitable
+
+  def initialize(count, old_object, new_object)
+    @count      = count
+    @old_object = old_object
+    @new_object = new_object
+  end
+
+  def for_crust
+    Crust.new
+  end
+
+  def for_topping(topping, pizza)
+    if (count > 0) && (topping.equal? old_object)
+      Topping.new(new_object, pizza.accept(LimitedSubstituteFn.new(count - 1, old_object, new_object)))
+    else
+      Topping.new(topping, pizza.accept(self))
+    end
+  end
+
+  private
+  attr_reader :count, :old_object, :new_object
+end
+
 class Pizza
   def accept(pizza_visitable)
     raise NotImplementedError
@@ -129,3 +154,4 @@ Topping.new(Anchovy.new, Topping.new(Zero.new, Topping.new(Salmon.new, Crust.new
 Topping.new(OneMoreThan.new(Zero.new), Topping.new(OneMoreThan.new(Zero.new), Topping.new(Salmon.new, Crust.new))).accept(RemoveFn.new(Salmon.new))
 Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new)))
 Topping.new(Anchovy.new, Topping.new(Tuna.new, Crust.new)).accept(SubstituteFn.new(Tuna.new, Anchovy.new))
+Topping.new(Anchovy.new, Topping.new(Anchovy.new, Topping.new(Anchovy.new, Crust.new))).accept(LimitedSubstituteFn.new(2, Anchovy.new, Tuna.new))
