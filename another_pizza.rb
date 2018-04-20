@@ -1,4 +1,16 @@
+module PizzaVisitable
+  def for_crust
+    raise NotImplementedError
+  end
+
+  def for_topping
+    raise NotImplementedError
+  end
+end
+
 class SubstituteFn
+  include PizzaVisitable
+
   def initialize(old_object, new_object)
     @old_object = old_object
     @new_object = new_object
@@ -10,9 +22,9 @@ class SubstituteFn
 
   def for_topping(topping, pizza)
     if topping.equal? old_object
-      Topping.new(new_object, pizza.substitute_object(self))
+      Topping.new(new_object, pizza.accept(self))
     else
-      Topping.new(topping, pizza.substitute_object(self))
+      Topping.new(topping, pizza.accept(self))
     end
   end
 
@@ -21,6 +33,8 @@ class SubstituteFn
 end
 
 class RemoveFn
+  include PizzaVisitable
+
   def initialize(object)
     @object = object
   end
@@ -31,9 +45,9 @@ class RemoveFn
 
   def for_topping(topping, pizza)
     if topping.equal? object
-      pizza.remove_object(self)
+      pizza.accept(self)
     else
-      Topping.new(topping, pizza.remove_object(self))
+      Topping.new(topping, pizza.accept(self))
     end
   end
 
@@ -42,22 +56,14 @@ class RemoveFn
 end
 
 class Pizza
-  def remove_object(remove_fn)
-    raise NotImplementedError
-  end
-
-  def substitute_object(substitute_fn)
+  def accept(pizza_visitable)
     raise NotImplementedError
   end
 end
 
 class Crust < Pizza
-  def remove_object(remove_fn)
-    remove_fn.for_crust
-  end
-
-  def substitute_object(substitute_fn)
-    substitute_fn.for_crust
+  def accept(pizza_visitable)
+    pizza_visitable.for_crust
   end
 end
 
@@ -69,12 +75,8 @@ class Topping < Pizza
     @pizza   = pizza
   end
 
-  def remove_object(remove_fn)
-    remove_fn.for_topping(topping, pizza)
-  end
-
-  def substitute_object(substitute_fn)
-    substitute_fn.for_topping(topping, pizza)
+  def accept(pizza_visitable)
+    pizza_visitable.for_topping(topping, pizza)
   end
 end
 
@@ -122,9 +124,8 @@ class OneMoreThan < Number
 end
 
 Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new)))
-Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new))).remove_object(RemoveFn.new(Salmon.new))
-Topping.new(Anchovy.new, Topping.new(Zero.new, Topping.new(Salmon.new, Crust.new))).remove_object(RemoveFn.new(Zero.new))
-Topping.new(OneMoreThan.new(Zero.new), Topping.new(OneMoreThan.new(Zero.new), Topping.new(Salmon.new, Crust.new))).remove_object(RemoveFn.new(Salmon.new))
+Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new))).accept(RemoveFn.new(Salmon.new))
+Topping.new(Anchovy.new, Topping.new(Zero.new, Topping.new(Salmon.new, Crust.new))).accept(RemoveFn.new(Zero.new))
+Topping.new(OneMoreThan.new(Zero.new), Topping.new(OneMoreThan.new(Zero.new), Topping.new(Salmon.new, Crust.new))).accept(RemoveFn.new(Salmon.new))
 Topping.new(Anchovy.new, Topping.new(Tuna.new, Topping.new(Salmon.new, Crust.new)))
-require 'pry'; binding.pry
-Topping.new(Anchovy.new, Topping.new(Tuna.new, Crust.new)).substitute_object(SubstituteFn.new(Tuna.new, Anchovy.new))
+Topping.new(Anchovy.new, Topping.new(Tuna.new, Crust.new)).accept(SubstituteFn.new(Tuna.new, Anchovy.new))
