@@ -69,10 +69,14 @@ class LimitedSubstituteFn
   end
 
   def for_topping(topping, pizza)
-    if (count > 0) && (topping.equal? old_object)
-      Topping.new(new_object, pizza.accept(LimitedSubstituteFn.new(count - 1, old_object, new_object)))
+    if count == 0
+      Topping.new(topping, pizza)
     else
-      Topping.new(topping, pizza.accept(self))
+      if topping.equal? old_object
+        Topping.new(new_object, pizza.accept(LimitedSubstituteFn.new(count - 1, old_object, new_object)))
+      else
+        Topping.new(topping, pizza.accept(self))
+      end
     end
   end
 
